@@ -1,5 +1,3 @@
-// lib/providers/dessert_provider.dart
-
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
@@ -32,12 +30,10 @@ class DessertProvider extends ChangeNotifier {
         .toList();
   }
 
-  /// Mengambil semua data dessert dari repository
   Future<void> loadDesserts() async {
     _setStatus(DessertStatus.loading);
     final result = await _repository.getDesserts();
     if (result.success && result.data != null) {
-      // PERBAIKAN: Tambahkan .toList() agar list bisa dihapus/edit
       _desserts = result.data!.toList();
       _setStatus(DessertStatus.success);
     } else {
@@ -46,7 +42,6 @@ class DessertProvider extends ChangeNotifier {
     }
   }
 
-  /// Mengambil detail satu dessert berdasarkan ID
   Future<void> loadDessertById(String id) async {
     _setStatus(DessertStatus.loading);
     final result = await _repository.getDessertById(id);
@@ -59,12 +54,11 @@ class DessertProvider extends ChangeNotifier {
     }
   }
 
-  /// Menambah dessert baru (Mendukung Mobile & Web)
   Future<bool> addDessert({
     required String nama,
     required String deskripsi,
-    required String bahanUtama, // UPDATE: Sesuai BE
-    required String kategori,    // UPDATE: Sesuai BE
+    required String bahanUtama,
+    required String kategori,
     File? imageFile,
     Uint8List? imageBytes,
     String imageFilename = 'dessert.jpg',
@@ -73,8 +67,8 @@ class DessertProvider extends ChangeNotifier {
     final result = await _repository.createDessert(
       nama: nama,
       deskripsi: deskripsi,
-      bahanUtama: bahanUtama, // Sesuaikan kiriman ke repo
-      kategori: kategori,     // Sesuaikan kiriman ke repo
+      bahanUtama: bahanUtama,
+      kategori: kategori,
       imageFile: imageFile,
       imageBytes: imageBytes,
       imageFilename: imageFilename,
@@ -88,13 +82,12 @@ class DessertProvider extends ChangeNotifier {
     return false;
   }
 
-  /// Mengedit data dessert yang sudah ada
   Future<bool> editDessert({
     required String id,
     required String nama,
     required String deskripsi,
-    required String bahanUtama, // UPDATE: Sesuai BE
-    required String kategori,    // UPDATE: Sesuai BE
+    required String bahanUtama,
+    required String kategori,
     File? imageFile,
     Uint8List? imageBytes,
     String imageFilename = 'dessert.jpg',
@@ -104,8 +97,8 @@ class DessertProvider extends ChangeNotifier {
       id: id,
       nama: nama,
       deskripsi: deskripsi,
-      bahanUtama: bahanUtama, // Sesuaikan kiriman ke repo
-      kategori: kategori,     // Sesuaikan kiriman ke repo
+      bahanUtama: bahanUtama,
+      kategori: kategori,
       imageFile: imageFile,
       imageBytes: imageBytes,
       imageFilename: imageFilename,
@@ -119,7 +112,6 @@ class DessertProvider extends ChangeNotifier {
     return false;
   }
 
-  /// Menghapus dessert dari daftar
   Future<bool> removeDessert(String id) async {
     _setStatus(DessertStatus.loading);
     final result = await _repository.deleteDessert(id);
@@ -145,6 +137,6 @@ class DessertProvider extends ChangeNotifier {
 
   void _setStatus(DessertStatus status) {
     _status = status;
-    notifyListeners();
+    notifyListeners(); // Sekarang memanggil fungsi asli
   }
 }

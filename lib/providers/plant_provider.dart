@@ -1,5 +1,3 @@
-// lib/providers/plant_provider.dart
-
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
@@ -36,7 +34,6 @@ class PlantProvider extends ChangeNotifier {
     _setStatus(PlantStatus.loading);
     final result = await _repository.getPlants();
     if (result.success && result.data != null) {
-      // PERBAIKAN: Tambahkan .toList() agar list bisa dihapus/edit
       _plants = result.data!.toList();
       _setStatus(PlantStatus.success);
     } else {
@@ -57,8 +54,6 @@ class PlantProvider extends ChangeNotifier {
     }
   }
 
-  // imageFile  → mobile (Android/iOS)
-  // imageBytes → web
   Future<bool> addPlant({
     required String nama,
     required String deskripsi,
@@ -87,9 +82,6 @@ class PlantProvider extends ChangeNotifier {
     return false;
   }
 
-  // imageFile  → mobile (Android/iOS)
-  // imageBytes → web
-  // null di keduanya = server pertahankan gambar lama
   Future<bool> editPlant({
     required String id,
     required String nama,
@@ -145,6 +137,8 @@ class PlantProvider extends ChangeNotifier {
 
   void _setStatus(PlantStatus status) {
     _status = status;
-    notifyListeners();
+    notifyListeners(); // Fungsi asli sekarang terpanggil
   }
+
+// BAGIAN 'void notifyListeners() {}' TELAH DIHAPUS
 }
