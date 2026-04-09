@@ -8,14 +8,14 @@ import 'core/theme/theme_notifier.dart';
 import 'providers/plant_provider.dart';
 import 'providers/dessert_provider.dart'; // IMPORT BARU: DessertProvider
 
-class DelcomApp extends StatefulWidget {
-  const DelcomApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<DelcomApp> createState() => _DelcomAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _DelcomAppState extends State<DelcomApp> {
+class _MyAppState extends State<MyApp> {
   final ThemeNotifier _themeNotifier = ThemeNotifier(initial: ThemeMode.light);
 
   @override

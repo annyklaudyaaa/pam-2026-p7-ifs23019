@@ -17,7 +17,7 @@ void main() {
     }
 
     testWidgets('aplikasi berjalan dan menampilkan HomeScreen', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       // Pastikan ada teks Halo Anny atau judul Home
@@ -26,7 +26,7 @@ void main() {
     });
 
     testWidgets('navigasi dari Home ke Plants via BottomNav', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       // Tap Plants di bottom nav menggunakan Key
@@ -41,7 +41,7 @@ void main() {
     });
 
     testWidgets('navigasi dari Home ke Desserts via BottomNav', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       final dessertsTab = find.byKey(const Key('Desserts'));
@@ -52,7 +52,7 @@ void main() {
     });
 
     testWidgets('navigasi dari Home ke Profile via BottomNav', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       await tester.tap(find.byKey(const Key('Profile')));
@@ -63,7 +63,7 @@ void main() {
     });
 
     testWidgets('toggle dark mode mengubah tema aplikasi', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       // Cari ikon light mode
@@ -78,7 +78,7 @@ void main() {
     });
 
     testWidgets('pencarian di halaman Desserts', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       // Ke Desserts dulu
@@ -101,7 +101,7 @@ void main() {
     });
 
     testWidgets('navigasi kembali ke Home dari Desserts', (tester) async {
-      await tester.pumpWidget(const DelcomApp());
+      await tester.pumpWidget(const MyApp());
       await waitForPage(tester);
 
       // Ke Desserts
