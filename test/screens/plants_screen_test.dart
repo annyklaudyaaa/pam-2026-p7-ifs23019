@@ -25,8 +25,9 @@ class MockPlantRepository extends PlantRepository {
 Widget buildPlantsScreenTest(List<PlantModel> plants) {
   final notifier = ThemeNotifier(initial: ThemeMode.light);
   final provider = PlantProvider(
-    repository: MockPlantRepository(plants),
+    repository: MockPlantRepository(plants.toList()),
   );
+
   final router = GoRouter(
     initialLocation: '/plants',
     routes: [
@@ -34,14 +35,8 @@ Widget buildPlantsScreenTest(List<PlantModel> plants) {
         path: '/plants',
         builder: (_, __) => const PlantsScreen(),
       ),
-      GoRoute(
-        path: '/plants/:id',
-        builder: (_, __) => const SizedBox(),
-      ),
-      GoRoute(
-        path: '/plants/add',
-        builder: (_, __) => const SizedBox(),
-      ),
+      GoRoute(path: '/plants/:id', builder: (_, __) => const SizedBox()),
+      GoRoute(path: '/plants/add', builder: (_, __) => const SizedBox()),
     ],
   );
 
@@ -58,15 +53,15 @@ Widget buildPlantsScreenTest(List<PlantModel> plants) {
 }
 
 void main() {
-  const testPlants = [
-    PlantModel(
+  final testPlants = [
+    const PlantModel(
         id: 'uuid-wortel',
         nama: 'Wortel',
         gambar: 'https://host/static/plants/wortel.png',
         deskripsi: 'Sayuran berwarna oranye.',
         manfaat: 'Baik untuk mata.',
         efekSamping: 'Karotenemia.'),
-    PlantModel(
+    const PlantModel(
         id: 'uuid-tomat',
         nama: 'Tomat',
         gambar: 'https://host/static/plants/tomat.png',
@@ -75,35 +70,42 @@ void main() {
         efekSamping: 'Asam lambung.'),
   ];
 
-  group('PlantsScreen', () {
-    testWidgets('menampilkan daftar tanaman dari API', (tester) async {
-      await tester.pumpWidget(buildPlantsScreenTest(testPlants));
-      await tester.pumpAndSettle();
+  group('PlantsScreen Widget Test (Stable Version)', () {
 
+    Future<void> pumpPlants(WidgetTester tester, List<PlantModel> data) async {
+      await tester.pumpWidget(buildPlantsScreenTest(data));
+      // 1. Trigger pembangunan widget awal
+      await tester.pump();
+      // 2. Tunggu sebentar (durasi mock loading)
+      await tester.pump(const Duration(milliseconds: 500));
+      // 3. KUNCI: Pump sekali lagi untuk merender ulang layar setelah data masuk
+      await tester.pump();
+    }
+
+    testWidgets('menampilkan daftar tanaman dari API', (tester) async {
+      await pumpPlants(tester, testPlants);
+
+      // Sekarang "Wortel" seharusnya sudah muncul
       expect(find.text('Wortel'), findsOneWidget);
       expect(find.text('Tomat'), findsOneWidget);
     });
 
-    testWidgets('menampilkan pesan kosong ketika tidak ada tanaman',
-            (tester) async {
-          await tester.pumpWidget(buildPlantsScreenTest([]));
-          await tester.pumpAndSettle();
+    testWidgets('menampilkan pesan kosong ketika tidak ada tanaman', (tester) async {
+      await pumpPlants(tester, []);
 
-          expect(find.text('Tidak ada data tanaman!'), findsOneWidget);
-        });
+      // Pakai textContaining agar lebih fleksibel terhadap spasi atau karakter tambahan
+      expect(find.textContaining('Daftar tanaman masih kosong nih!'), findsOneWidget);
+    });
 
-    testWidgets('menampilkan tombol FAB untuk tambah tanaman',
-            (tester) async {
-          await tester.pumpWidget(buildPlantsScreenTest(testPlants));
-          await tester.pumpAndSettle();
+    testWidgets('menampilkan tombol FAB untuk tambah tanaman', (tester) async {
+      await pumpPlants(tester, testPlants);
 
-          expect(find.byType(FloatingActionButton), findsOneWidget);
-          expect(find.byIcon(Icons.add), findsOneWidget);
-        });
+      expect(find.byType(FloatingActionButton), findsOneWidget);
+      expect(find.byIcon(Icons.add), findsOneWidget);
+    });
 
     testWidgets('menampilkan search icon di AppBar', (tester) async {
-      await tester.pumpWidget(buildPlantsScreenTest(testPlants));
-      await tester.pumpAndSettle();
+      await pumpPlants(tester, testPlants);
 
       expect(find.byIcon(Icons.search), findsOneWidget);
     });

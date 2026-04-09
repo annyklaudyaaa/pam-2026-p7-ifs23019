@@ -26,15 +26,16 @@ class MockDessertRepository extends DessertRepository {
         message: 'Gagal terhubung ke server toko kue.',
       );
     }
-    return ApiResponse(success: true, message: 'OK', data: mockDesserts);
+    // PERBAIKAN: Gunakan .toList() agar list bisa dimodifikasi (hapus/tambah) di dalam test
+    return ApiResponse(success: true, message: 'OK', data: mockDesserts.toList());
   }
 
   @override
   Future<ApiResponse<String>> createDessert({
     required String nama,
     required String deskripsi,
-    required String bahanUtama, // UPDATE
-    required String kategori,    // UPDATE
+    required String bahanUtama,
+    required String kategori,
     File? imageFile,
     Uint8List? imageBytes,
     String imageFilename = 'dessert.jpg',
@@ -65,21 +66,22 @@ class MockDessertRepository extends DessertRepository {
 }
 
 void main() {
-  const testDesserts = [
-    DessertModel(
+  // Gunakan List biasa (bukan const di level variabel ini agar lebih fleksibel)
+  final testDesserts = [
+    const DessertModel(
         id: 'uuid-klepon',
         nama: 'Klepon',
         gambar: 'https://host/static/desserts/klepon.png',
         deskripsi: 'Manis legit',
-        bahanUtama: 'Ketan, gula merah', // UPDATE
-        kategori: 'Traditional'),        // UPDATE
-    DessertModel(
+        bahanUtama: 'Ketan, gula merah',
+        kategori: 'Traditional'),
+    const DessertModel(
         id: 'uuid-brownies',
         nama: 'Brownies',
         gambar: 'https://host/static/desserts/brownies.png',
         deskripsi: 'Nyoklat banget',
-        bahanUtama: 'Cokelat, tepung',    // UPDATE
-        kategori: 'Cake'),               // UPDATE
+        bahanUtama: 'Cokelat, tepung',
+        kategori: 'Cake'),
   ];
 
   group('DessertProvider Unit Test (Synced Version)', () {
@@ -123,19 +125,21 @@ void main() {
 
     test('removeDessert berhasil menghapus item dari list lokal', () async {
       await provider.loadDesserts();
+      // Sekarang ini tidak akan error lagi karena kita pakai .toList() di Mock
       final success = await provider.removeDessert('uuid-brownies');
 
       expect(success, isTrue);
-      expect(provider.desserts.any((d) => d.id == 'uuid-brownies'), isFalse);
+      // Cek apakah list benar-benar berkurang
       expect(provider.desserts.length, equals(1));
+      expect(provider.desserts.any((d) => d.id == 'uuid-brownies'), isFalse);
     });
 
     test('addDessert memicu pemuatan ulang data jika berhasil', () async {
       final success = await provider.addDessert(
         nama: 'Donat',
         deskripsi: 'Empuk',
-        bahanUtama: 'Tepung, ragi', // UPDATE
-        kategori: 'Pastry',         // UPDATE
+        bahanUtama: 'Tepung, ragi',
+        kategori: 'Pastry',
       );
 
       expect(success, isTrue);

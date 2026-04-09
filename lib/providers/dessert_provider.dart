@@ -37,7 +37,8 @@ class DessertProvider extends ChangeNotifier {
     _setStatus(DessertStatus.loading);
     final result = await _repository.getDesserts();
     if (result.success && result.data != null) {
-      _desserts = result.data!;
+      // PERBAIKAN: Tambahkan .toList() agar list bisa dihapus/edit
+      _desserts = result.data!.toList();
       _setStatus(DessertStatus.success);
     } else {
       _errorMessage = result.message;

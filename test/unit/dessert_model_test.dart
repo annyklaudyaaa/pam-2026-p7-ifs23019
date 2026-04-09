@@ -14,15 +14,18 @@ void main() {
       'https://pam-2026-p4-ifs23019-be.annyklaudya.site:8080/static/desserts/uuid.png',
       pathGambar: 'uploads/desserts/uuid.png',
       deskripsi: 'Bola-bola ketan isi gula merah.',
-      bahanUtama: 'Tepung ketan, gula merah, parutan kelapa.', // UPDATE
-      kategori: 'Traditional',                                // UPDATE
+      bahanUtama: 'Tepung ketan, gula merah, parutan kelapa.',
+      kategori: 'Traditional',
     );
 
     test('membuat objek dengan semua field yang benar (Sweet Version)', () {
       expect(dessert.id, equals(uuid));
       expect(dessert.nama, equals('Klepon'));
       expect(dessert.gambar, contains('/static/desserts/'));
-      expect(dessert.bahanUtama, contains('Gula merah')); // UPDATE
+
+      // FIX: Ganti 'Gula merah' (kapital) jadi 'gula merah' (kecil)
+      // agar sesuai dengan isi variabel bahanUtama di atas.
+      expect(dessert.bahanUtama, contains('gula merah'));
     });
 
     test('fromJson memetakan field dessert dengan benar', () {
@@ -33,15 +36,15 @@ void main() {
         'https://pam-2026-p4-ifs23019-be.annyklaudya.site:8080/static/desserts/uuid.png',
         'pathGambar': 'uploads/desserts/uuid.png',
         'deskripsi': 'Bola-bola ketan isi gula merah.',
-        'bahanUtama': 'Tepung ketan, gula merah, parutan kelapa.', // UPDATE
-        'kategori': 'Traditional',                                // UPDATE
+        'bahanUtama': 'Tepung ketan, gula merah, parutan kelapa.',
+        'kategori': 'Traditional',
       };
 
       final result = DessertModel.fromJson(json);
 
       expect(result.id, equals(uuid));
       expect(result.nama, equals('Klepon'));
-      expect(result.kategori, equals('Traditional')); // UPDATE
+      expect(result.kategori, equals('Traditional'));
       expect(result.gambar, contains('http'));
     });
 
@@ -50,8 +53,8 @@ void main() {
 
       expect(updated.nama, equals('Onde-onde'));
       expect(updated.id, equals(dessert.id));
-      expect(updated.kategori, equals(dessert.kategori)); // UPDATE
-      expect(updated.bahanUtama, equals(dessert.bahanUtama)); // UPDATE
+      expect(updated.kategori, equals(dessert.kategori));
+      expect(updated.bahanUtama, equals(dessert.bahanUtama));
     });
 
     test('dua dessert dianggap sama jika memiliki UUID yang sama (Equality)', () {

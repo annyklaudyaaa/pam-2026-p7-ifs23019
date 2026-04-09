@@ -36,7 +36,8 @@ class PlantProvider extends ChangeNotifier {
     _setStatus(PlantStatus.loading);
     final result = await _repository.getPlants();
     if (result.success && result.data != null) {
-      _plants = result.data!;
+      // PERBAIKAN: Tambahkan .toList() agar list bisa dihapus/edit
+      _plants = result.data!.toList();
       _setStatus(PlantStatus.success);
     } else {
       _errorMessage = result.message;
@@ -146,6 +147,4 @@ class PlantProvider extends ChangeNotifier {
     _status = status;
     notifyListeners();
   }
-
-  void notifyListeners() {}
 }
